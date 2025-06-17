@@ -1,50 +1,22 @@
 pipeline {
     agent any
-
-    environment {
-        IMAGE_NAME = "fawadrashid2/jenkin-devops-microservice"
-    }
-
     stages {
-        stage('Checkout') {
-            steps {
-                echo 'Cloning repository...'
-                checkout scm
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
-                echo "Building Docker image..."
-                sh 'docker build -t $IMAGE_NAME .'
+                echo 'Building Docker image...'
+                sh 'docker build -t fawadrashid2/jenkin-devops-microservice .'
             }
         }
-
         stage('Test') {
             steps {
-                echo 'Running basic test (checking if Docker image exists)...'
-                sh 'docker images | grep $IMAGE_NAME'
+                echo 'Testing...'
+                // add test steps here
             }
         }
-
-        // Optional: Add this if you want to push to Docker Hub
-        // stage('Push to Docker Hub') {
-        //     steps {
-        //         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        //             sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
-        //             sh 'docker push $IMAGE_NAME'
-        //         }
-        //     }
-        // }
     }
-
     post {
-        success {
-            echo 'Pipeline completed successfully!'
-        }
         failure {
             echo 'Pipeline failed.'
         }
     }
 }
-
