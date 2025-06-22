@@ -1,19 +1,35 @@
 pipeline {
     agent any
+
     stages {
+        stage("Code Clone") {
+            steps {
+                git branch: 'main', url: 'https://github.com/fawadrashid2/jenkin-devops-microservice.git'
+            }
+        }
+
+        stage("Debug") {
+            steps {
+                sh 'pwd'
+                sh 'ls -l'
+                sh 'ls -l jenkin-devops-microservice || true'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                sh 'docker build -t fawadrashid2/jenkin-devops-microservice .'
+                sh 'docker build -t fawad-micro jenkin-devops-microservice'
             }
         }
+
         stage('Test') {
             steps {
                 echo 'Testing...'
-                // add test steps here
             }
         }
     }
+
     post {
         failure {
             echo 'Pipeline failed.'
